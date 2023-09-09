@@ -8,13 +8,14 @@
         <meta name="author" content="{{ config.extra.author }}">
         <title>{% block title %}{{ config.title }}{% endblock title %}</title>
         <link rel="stylesheet" href="{{ get_url(path="site.css") }}"/>
+        {% block script %} {% endblock script %}
     </head>
     <body>
 
         <header>
             <nav class="{% block extra_nav_class %}container{% endblock extra_nav_class %}">
-                <a class="white" href="{{ get_url(path="@/about.md") }}" class="nav-link">About</a>
-                <a class="white" href="{{ get_url(path="@/resume.md") }}" class="nav-link">Resume</a>
+                <a class="white" href="{{ get_url(path="@/about/index.md") }}" class="nav-link">About</a>
+                <a class="white" href="{{ get_url(path="@/resume/index.md") }}" class="nav-link">Resume</a>
                 <a class="white" href="{{ get_url(path="@/note/_index.md") }}" class="nav-link">Notes</a>
             </nav>
         </header>
