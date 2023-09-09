@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
+        <meta name="author" content="{{ config.extra.author }}">
+        <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+        <link rel="stylesheet" href="{{ get_url(path="site.css") }}"/>
+    </head>
+    <body>
+
+        <header>
+            <nav class="{% block extra_nav_class %}container{% endblock extra_nav_class %}">
+                <a class="white" href="{{ get_url(path="@/about.md") }}" class="nav-link">About</a>
+                <a class="white" href="{{ get_url(path="@/resume.md") }}" class="nav-link">Resume</a>
+                <a class="white" href="{{ get_url(path="@/note/_index.md") }}" class="nav-link">Notes</a>
+            </nav>
+        </header>
+
+        <div class="content {% block extra_content_class %}{% endblock extra_content_class %}">
+            {% block content %} {% endblock content %}
+        </div>
+        <!-- <footer>
+            ©2017-{{ now() | date(format="%Y") }} — <a class="white" href="https://vincentprouillet.com">Vincent Prouillet</a> and <a class="white" href="https://github.com/getzola/zola/graphs/contributors">contributors</a>
+        </footer> -->
+
+    </body>
+</html>
