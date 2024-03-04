@@ -13,7 +13,6 @@ zola serve # serve the site @ `127.0.0.1:1111`
 check out [zola cli usage](https://www.getzola.org/documentation/getting-started/cli-usage/)
 
 
-
 ## how to write a post
 
 to write a post under route `/foo/bar/new-post`:
@@ -48,6 +47,13 @@ check out [zolo page documentation](https://www.getzola.org/documentation/conten
 ## how to add image
 
 use shortcodes (think it like react component) `{{ resize_image(...) }}`
+
+## how to style a component
+
+zola uses scss to style, so:
+
+- a html elment `<div class="xxx__yyy"> ... </div>` will be styled by `.xxx { &__yyy {...}}` in some `.scss` file.
+- a html element `<xxx > ... </xxx>` will be styled by `xxx { ...}` in some `.scss` file.
 
 ## how to add links to static assets
 
