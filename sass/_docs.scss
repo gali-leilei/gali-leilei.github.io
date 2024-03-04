@@ -40,7 +40,7 @@
   }
 
   &__content {
-    width: 60%;
+    width: 100%; // there is no sidebar now
     // Same as the anchor absolute left to not overlap
     margin-left: 2rem;
 
