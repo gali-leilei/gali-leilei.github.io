@@ -1,6 +1,6 @@
 +++
 title = "Sampling A Skewed Distribution"
-date = "April 2023"
+date = 2023-04-21
 +++
 
 ## Motivation
