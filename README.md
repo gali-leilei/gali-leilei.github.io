@@ -58,7 +58,10 @@ zola uses scss to style, so:
 
 ## how to add links to static assets?
 
-TODO
+## how to link to other pages?
+
+Use [interal link](https://www.getzola.org/documentation/content/linking/#internal-links).
+
 
 ## how to publish to bitbucket?
 

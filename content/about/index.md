@@ -22,4 +22,4 @@ Open to opportunies in solving problems with machine learning.
 
 ## Now
 
-Check out [what I am doing now](./now).
+Check out [what I am doing now](@/now/may-2021.md).
