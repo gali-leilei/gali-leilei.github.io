@@ -8,8 +8,8 @@ resume
 
 <div>
 
-[Education](#education)
 [Experience](#experience)
+[Education](#education)
 [Projects](#projects)
 [Skills](#skills)
 [Get a PDF](./resume.pdf)
@@ -18,48 +18,32 @@ resume
 
 ---
 
-<a name="#education"></a>
-
-## Education
-
-### Stanford University
-
-#### _M.S. from ICME, Sep 2014 to Sep 2019_
-
-- Completed 135 units of course work. Relevant courses are:
-- Computer Science: CS107, CS110, CS148, CS369G, CME213, CME251, MS&E 317, EE364A, EE364B, CS369M, EE376A.
-- Machine Learning: CS 238, CS229, CS 231N, CS246, CS251.
-
-### Sep 2011 to May 2014, Duke Unversity
-
-#### _B.S. in Mathematics and Economics, Sep 2011 to May 2014_
-
-- Graduated in three years with _cum laude_.
-- 2013 Dean’s List with Distinction.
-- 2012 Freshmen Julia Dale Prize in Mathematics.
-
----
-
 <a name="experience"></a>
 
-## Experience
+# Experience
 
-### Algorithm Engineer
+## AI Scientist
 
-#### _Apr 2021 - June 2023, Lazada_
+### _July 2023 - present, Shanda Group_
 
-- working on Lazada recommendation frameworks and algorithms to improve Click Through Rate (CTR) and Gross Merchandise Value (GMV).
+- leads a cross-functional team to work on LLM-based apps.
 
-### Data Scientist
+## Algorithm Engineer
 
-#### _Apr 2020 - Apr 2021, Cartrack_
+### _Apr 2021 - June 2023, Lazada_
+
+- worked on Lazada recommendation frameworks and algorithms to improve Click Through Rate (CTR) and Gross Merchandise Value (GMV).
+
+## Data Scientist
+
+### _Apr 2020 - Apr 2021, Cartrack_
 
 - Researched and prototyped a pipeline for car theft detection, in Python with Datasketches/SQL.
 - Researched and implemented a testing environment for filtering algorithms, in Python/Typescript with Next.js/FastAPI.
 
-### Graduate Research Assistant
+## Graduate Research Assistant
 
-#### _Sep 2015 - Sep 2019, ICME @ Stanford_
+### _Sep 2015 - Sep 2019, ICME @ Stanford_
 
 - Performed four years of research in pursuit of PhD before exiting the program.
 - researched on matrix completion/low rank approximation algorithms for high dimensional physics problem (fluid structure intereaction).
@@ -67,9 +51,31 @@ resume
 
 ---
 
+<a name="#education"></a>
+
+# Education
+
+## Stanford University
+
+### _M.S. from ICME, Sep 2014 to Sep 2019_
+
+- Completed 135 units of course work. Relevant courses are:
+- Computer Science: CS107, CS110, CS148, CS369G, CME213, CME251, MS&E 317, EE364A, EE364B, CS369M, EE376A.
+- Machine Learning: CS 238, CS229, CS 231N, CS246, CS251.
+
+## Sep 2011 to May 2014, Duke Unversity
+
+### _B.S. in Mathematics and Economics, Sep 2011 to May 2014_
+
+- Graduated in three years with _cum laude_.
+- 2013 Dean’s List with Distinction.
+- 2012 Freshmen Julia Dale Prize in Mathematics.
+
+---
+
 <a name="projects"></a>
 
-## Projects
+# Projects
 
 ** Coming Soon **. In the meantime, check out [my projects page](./projects)
 
@@ -81,7 +87,7 @@ resume
 
 - Distributed computing: Spark, OpenMP
 - Machine learning: Tensorflow, Pytorch
-- Language: Python, C/C++, SQL
+- Language: Python, SQL, Golang
 
 ## Honors / Awards
 
