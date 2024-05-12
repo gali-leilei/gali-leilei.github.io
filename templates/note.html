@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  {{ section.title }}
-</h1>
-<ul>
   <!-- If you are using pagination, section.pages will be empty. You need to use the paginator object -->  
-  {% for page in section.pages %}
-  <li><a href="{{ page.permalink | safe }}">{{ page.title }}</a></li>
-  {% endfor %}
-</ul>
+  <div class="inverted-colours selling-points">
+    <div class="selling-points__content container">
+      {% for page in section.pages %}
+        <div class="selling-point">
+          <h2><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
+          <p> From {{page.date}}</p>
+        </div>
+      {% endfor %}
+      </div>
+  </div>
+  
 {% endblock content %}

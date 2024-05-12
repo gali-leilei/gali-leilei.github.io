@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  Welcome to my blog!
-</h1>
-<p>Click <a href="{{ get_url(path='@/about/index.md') }}">here</a> for more.</p>
+<div class="hero">
+  <h1>
+    Welcome to my blog!
+  </h1>
+  <p class="hero__tagline">
+    Software/Algorithm Engineer based in Singapore
+  </p>
+  <p>Click <a href="{{ get_url(path='@/about/index.md') }}">here</a> for more.</p>
+</div>
 {% endblock content %}
