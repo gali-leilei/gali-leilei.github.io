@@ -7,8 +7,8 @@ serve:
 build:
 	zola build
 	cp -r public/* ../galileilei.bitbucket.io/.
-	cd ../galileilei.bitbucket.io 
-	git pull origin master
-	git add .
-	git commit -m "new version"
+	cd ../galileilei.bitbucket.io && \
+	git pull origin master && \
+	git add . && \
+	git commit -m "new version" && \
 	git push -u origin master
