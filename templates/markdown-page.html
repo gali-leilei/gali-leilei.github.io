@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="documentation__content">
 <h1 class="title">
   {{ page.title }}
 </h1>
 <p class="subtitle"><strong>{{ page.date }}</strong></p>
-<div class="documentation__content">
   {{ page.content | safe }}
 </div>
 {% endblock content %}
@@ -19,4 +19,4 @@
 </script>
 {% endblock script %}
 
-{% block extra_content_class %} inverted-colours{% endblock extra_content_class %}
+{% block extra_content_class %} content--reversed{% endblock extra_content_class %}
