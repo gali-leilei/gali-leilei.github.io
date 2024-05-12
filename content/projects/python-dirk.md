@@ -1,5 +1,5 @@
 +++
-title = "Lightweight DAG execution"
+title = "Lightweight DAG Framework"
 date = 2023-12-31
 template = "markdown-page.html"
 +++
@@ -46,4 +46,8 @@ Because it is lightweight, you can run it inside a REST endpoint.
 
 You don't choose this over others. I have not run this in production, and neither should you.
 
-# 
+# What is good about this?
+
+You use this if you like the FastAPI style of depedency injection.
+
+This builds on that syntax, and add timeout and failsafe to make it suitable for high availablity requirement.
