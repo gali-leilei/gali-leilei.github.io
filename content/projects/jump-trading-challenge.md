@@ -50,23 +50,19 @@ If you are interested in the details, have a look [my submission for part 2][3].
 
 ### Finding the Strategy
 
-The algorithm to compute the strategy turns out to be [Policy Iteration][4] or [Value Iteration][5] (I came around to these in a roundabout way, I will write about them in another post). If you run value iteration first, you will note that:
+Any reinforcement learning algorithm will do, for example [Policy Iteration][4] or [Value Iteration][5] (I came around to these in a roundabout way, I will write about them in another post). If you run value iteration first, you will note that:
 
 1. The aggressive play is a *winning* play,
-2. There are other strategy, which bet less and achieve the same winrate.
+2. There are other strategies, which bet less and achieve the same winrate.
 
-If you run the policy iteration on $N = 2^m$, you will notice something strange:
+If you run the policy iteration on $N = 2^m$, you will notice something strange: the smallest amount to bet for $x = 2^k y$ is $2^k$. This has the same payoff as all-out aggresive play.
 
+### Part II: For Arbitrary Input
 
-It turns out that the best amount to bet for $x = 2^k y$ is $2^k$, and it achieves the same winrate as all-out agreesive play.
-
-### For Arbitrary Input
-
-The previous insight is key, because running either algorithm on the set of all IEEE754 double precision number between 0 and 1 would be infeasible.
-
-It turns out proving the previous insight takes nothing more than induction on some recurrence relation, as shown in [page 6 and 7 here][3].
-
+Part II extends state and action space to all real number between 0 and 1. Running either policy/value iteration would be infeasible. The alternative, is to leverage the previous observation and extend it to all real number. This turns out to be much easier: induction on recurrence relation would suffice, as shown in [page 6 and 7 here][3].
 
 [1]: https://www.jumptrading.com/challenge
 [2]: https://www.quora.com/What-is-the-solution-to-the-2013-Jump-Trading-challenge
 [3]: /jump.pdf
+[4]: https://en.wikipedia.org/wiki/Markov_decision_process#Policy_iteration
+[5]: https://en.wikipedia.org/wiki/Markov_decision_process#Value_iteration
