@@ -5,13 +5,13 @@ date = 2023-01-23
 
 ## Motivation
 
-The goal of this note is to have a **simple** implentation of max-search and min-search algorithm in **Python**.
+The goal of this note is to have a **simple** implementation of max-search and min-search algorithm in **Python**.
 
-Why do I need this? There are quite a number of search problems for [advent-of-code 2022](https://adventofcode.com/2022), and normally I would Google `python dijkstra/dfs/bfs/`. Implmentation on Wikipedia has a rather large memory footprint though, with its main search algorithm tangled with data structure. I stumbled upon [A-star-search][cpablo-repo] by Python core developer cpablosga, which is the best implementation of min-search I have seen so far. I like it enough, so I will extend it to do max-search as well (see [this paper][TODO]).
+Why do I need this? There are quite a number of search problems for [advent-of-code 2022](https://adventofcode.com/2022), and normally I would Google `python dijkstra/dfs/bfs/`. Implementation on Wikipedia has a rather large memory footprint though, with its main search algorithm tangled with data structure. I stumbled upon [A-star-search][cpablo-repo] by Python core developer [cpablosga](), which is the best implementation of min-search I have seen so far. I like it enough, so I will extend it to do max-search as well (see [this paper][TODO]).
 
 ## Min Search
 
-Assumes the problem has a optimal sub-structure. Use A-\* if `lower_bound()` is avaiable; else use uniform cost search (logical equivalent to Dijkstra's algorithm).
+Assumes the problem has a optimal sub-structure. Use A-\* if `lower_bound()` is available; else use uniform cost search (logical equivalent to Dijkstra's algorithm).
 
 ```python
 from collections import namedtuple
@@ -58,7 +58,7 @@ class DijkstraHeap(list):
 
 A few notes:
 
-- the standard terminalogy is **open/visited set** in uniform cost search. I will stick to it (the code use `frontier` because `open` is a Python keyword).
+- the standard terminology is **open/visited set** in uniform cost search. I will stick to it (the code use `frontier` because `open` is a Python keyword).
 - **No comparison operator here**. It is possible because whenever we remove a node from the open set, it is guaranteed to be the first time we see it and the cost is minimal.
 - Modular. The core idea of `check the best-guess from open set` is orthogonal to `how to remove/add element to open set`; so is the implementation here.
 
@@ -110,7 +110,7 @@ class SearchSpace(list):
 
 A few notes:
 
-- Use `profit` instead of `cost`, as we are maximazing a quantity instead of minimizing.
+- Use `profit` instead of `cost`, as we are maximizing a quantity instead of minimizing.
 - One can use a max-heap instead of a plain array. Either way the open set should be exhausted.
 
 ## Lesses More Puzzle

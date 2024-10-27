@@ -21,7 +21,7 @@ A gambler is playing against the casino with a coin. Each round, the gambler bet
 
 An betting strategy $s : \mathbb{N} \rightarrow \mathbb{N}$ tells you the amount of bet $s(x)$ given your current winning $x$. It is optimal if for any starting amount $x$ gambler has
 
-- among all possible strategies $s'$, it gives the gambler the highest chace of winning the game (call it a *winning* strategy) and
+- among all possible strategies $s'$, it gives the gambler the highest chance of winning the game (call it a *winning* strategy) and
 - the amount it bets is the *smallest* among all *winning* strategies.
 
 (Part 1 of the challenge): Give the optimal strategy for $N = 1000$ and $N = 1,000,000$.
@@ -32,9 +32,9 @@ An betting strategy $s : \mathbb{N} \rightarrow \mathbb{N}$ tells you the amount
 ## Solution
 
 
-### A Familliar Context
+### A Familiar Context
 
-If you happened to know Markov chain, you may recognize its similiarity to gambler's ruin. With the coin biased towards the house, the gambler is at a disdvantage as the game drags on. 
+If you happened to know Markov chain, you may recognize its similarity to gambler's ruin. With the coin biased towards the house, the gambler is at a disadvantage as the game drags on. 
 
 It turns out that the gambler should play as aggressively as possible, betting everything he has each turn. But is that all to this problem?
 
@@ -53,9 +53,9 @@ If you are interested in the details, have a look [my submission for part 2][3].
 Any reinforcement learning algorithm will do, for example [Policy Iteration][4] or [Value Iteration][5] (I came around to these in a roundabout way, I will write about them in another post). If you run value iteration first, you will note that:
 
 1. The aggressive play is a *winning* play,
-2. There are other strategies, which bet less and achieve the same winrate.
+2. There are other strategies, which bet less and achieve the same win rate.
 
-If you run the policy iteration on $N = 2^m$, you will notice something strange: the smallest amount to bet for $x = 2^k y$ is $2^k$. This has the same payoff as all-out aggresive play.
+If you run the policy iteration on $N = 2^m$, you will notice something strange: the smallest amount to bet for $x = 2^k y$ is $2^k$. This has the same payoff as all-out aggressive play.
 
 ### Part II: For Arbitrary Input
 

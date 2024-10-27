@@ -1,5 +1,5 @@
 +++
-title = "Image Classfication"
+title = "Image Classification"
 date = 2017-03-31
 template = "markdown-page.html"
 +++
@@ -8,9 +8,9 @@ template = "markdown-page.html"
 
 Group project for CS221N, spring 2017.
 
-Convolutional Neural Network (CNN) was quite hype back then.
+Convolution Neural Network (CNN) was quite hype back then.
 
-This project compared several SOTA model at the time, and tried a few techniques to boost test metrics.
+This project compared several state-of-the-art (SOTA) model at the time, and tried a few techniques to boost test metrics.
 
 You can view [code][code] and [paper][paper] here.
 

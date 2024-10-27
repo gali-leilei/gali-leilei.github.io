@@ -1,5 +1,5 @@
 +++
-title = "Neural Archetecture Search on CNN"
+title = "Neural Architecture Search on CNN"
 date = 2017-03-31
 template = "markdown-page.html"
 +++

@@ -17,15 +17,15 @@ By the end of the post, I hope I have answered this question:
 
 **Definition** A _statistics_ is a function $T := r(X_1, X_2, \ldots, X_n)$ of the random samples $X_1, X_2, \ldots, X_n \in S$. For now, suppose the samples are sampled from a unknown distribution $\pi$.
 
-**Definition** A _statistical model_ is a pair of $(S, P)$, where $S$ is the set of all possible observation and $P$ is the set of probability distribution on $S$. A good menoiuc is S for Sample space and P for Prior distributions.
+**Definition** A _statistical model_ is a pair of $(S, P)$, where $S$ is the set of all possible observation and $P$ is the set of probability distribution on $S$. Note: S for Sample space and P for Prior distributions.
 
 **Definition** Given _statistical model_, $(S, P)$, suppose that $P$ is parameterized: $P := \{P_\theta \mid \theta \in O\}$. Then the model is:
 
 - _parametric_ if $O$ is finite dimensional,
-- _non-parametric_ if $O$ is inifinite dimensional,
-- _semi-parameteric_ if $O$ has both finite and infinite dimenional parameters.
+- _non-parametric_ if $O$ is infinite dimensional,
+- _semi-parametric_ if $O$ has both finite and infinite dimensional parameters.
 
-That was a monthful so that I can say the following:
+That was a mouthful so that I can say the following:
 
 **Definition** Let $(S, P_\theta)$ be a _parametric statistical models_ and $X_1, X_2, \ldots, X_n \in S$ be i.i.d. samples generated from $P_\theta^*$ for some unknown $\theta^* \in O$. An _estimator_ for $\theta^*$, $T(X_1, X_2, \ldots, X_n)$, is a _statistics_ that maps into $O$, i.e. $T: S^n \rightarrow O$.
 
@@ -38,7 +38,7 @@ In general, the true distribution, $\pi$, that generates the samples may not be 
 
 Sufficient statistics formalizes [the idea][sufficient-statistics] that, two sets of data yielding the same value for statistics $T(x)$, would yield the same inference about $\theta$. The notion of sufficiency makes most sense in term of information entropy; there is no loss of information regarding $\theta$ when compressing from samples, $X_1, X_2, \ldots, X_n$, to statistics, $T(X_1, X_2, \ldots, X_n)$.
 
-If we were to describe the distribution, a parametric model (distribution as a function of the statistics) is as good as a non-parametric model (distribution as a function of the data points), **if and only if** the distribution admits sufficient statisitcs.
+If we were to describe the distribution, a parametric model (distribution as a function of the statistics) is as good as a non-parametric model (distribution as a function of the data points), **if and only if** the distribution admits sufficient statistics.
 
 In layman's term, no information is lost when **compressing** arbitrary n data points (samples) into a fixed number of parameters (statistics).
 
@@ -46,11 +46,11 @@ So what does it have to do with exponential family of distributions?
 
 TODO: use factorization theorem instead, drop the assumption on i.i.d.
 
-## Essense of Exponential Family of Distribution
+## Essence of Exponential Family of Distribution
 
 [It turns out that][koopman-paper], a _sufficient_ condition (not a pun) for distributions admitting a sufficient statistics is that its distribution obeys a certain form:
 
-**Definition** (slide 11 from [MIT cource notes][glm-mit-notes]) _exponential family of distribution_ is a parametric distribution where:
+**Definition** (slide 11 from [MIT course notes][glm-mit-notes]) _exponential family of distribution_ is a parametric distribution where:
 
 A family of distribution $\{P_\theta: \theta \in \Omega \}$, $\Omega \subset \mathbb{R}^k$ is said to be a
 $k$ -parameter exponential family on $\mathbb{R}^q$ , if there exist real valued
@@ -66,7 +66,7 @@ $$
 
 For most practical purposes, $k$ is rarely more than 1. See this chart of commonly used distributions (FIXME: insert taxonomy of various distributions)
 
-## Defintion of Canonical Exponential Family of Distribution
+## Definition of Canonical Exponential Family of Distribution
 
 **Definition** A exponential family of distribution for $k = 1, x \in \mathbb{R}$ is canonical if
 
@@ -81,7 +81,7 @@ $$
 where
 
 - $t(x) := x$ is the sufficient statistics being identity function,
-- $\theta$ is the nautral parameters,
+- $\theta$ is the natural parameters,
 - $F(\cdot)$ is the log-normalizer,
 - $k(x)$ is the carrier measure.
 
