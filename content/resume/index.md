@@ -12,7 +12,7 @@ resume
 [Education](#education)
 [Projects](#projects)
 [Skills](#skills)
-[Get a PDF](./resume.pdf)
+[Get a PDF](./resume-20241028.pdf)
 
 </div>
 
@@ -22,11 +22,11 @@ resume
 
 # Experience
 
-## AI Scientist
+## AI Scientist/AI Lead
 
 _July 2023 - present, Shanda Group_
 
-- leads a cross-functional team to work on LLM-based apps.
+- leads a cross-functional team that provides backend services for LLM-centered apps.
 
 ## Algorithm Engineer
 
@@ -46,8 +46,8 @@ _Apr 2020 - Apr 2021, Cartrack_
 _Sep 2015 - Sep 2019, ICME @ Stanford_
 
 - Performed four years of research in pursuit of PhD before exiting the program.
-- researched on matrix completion/low rank approximation algorithms for high dimensional physics problem (fluid structure intereaction).
-- implemented distributed/parellel version of above algorithms.
+- researched on matrix completion/low rank approximation algorithms for high dimensional physics problem (fluid structure interaction).
+- implemented distributed/parallel version of above algorithms.
 
 ---
 
@@ -63,7 +63,7 @@ _M.S. from ICME, Sep 2014 to Sep 2019_
 - Computer Science: CS107, CS110, CS148, CS369G, CME213, CME251, MS&E 317, EE364A, EE364B, CS369M, EE376A.
 - Machine Learning: CS 238, CS229, CS 231N, CS246, CS251.
 
-## Sep 2011 to May 2014, Duke Unversity
+## Sep 2011 to May 2014, Duke University
 
 _B.S. in Mathematics and Economics, Sep 2011 to May 2014_
 

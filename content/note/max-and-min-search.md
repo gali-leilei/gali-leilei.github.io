@@ -7,7 +7,7 @@ date = 2023-01-23
 
 The goal of this note is to have a **simple** implementation of max-search and min-search algorithm in **Python**.
 
-Why do I need this? There are quite a number of search problems for [advent-of-code 2022](https://adventofcode.com/2022), and normally I would Google `python dijkstra/dfs/bfs/`. Implementation on Wikipedia has a rather large memory footprint though, with its main search algorithm tangled with data structure. I stumbled upon [A-star-search][cpablo-repo] by Python core developer [cpablosga](), which is the best implementation of min-search I have seen so far. I like it enough, so I will extend it to do max-search as well (see [this paper][TODO]).
+Why do I need this? There are quite a number of search problems for [advent-of-code 2022](https://adventofcode.com/2022), and normally I would Google `python dijkstra/dfs/bfs/`. Implementation on Wikipedia has a rather large memory footprint though, with its main search algorithm tangled with data structure. I stumbled upon [A-star-search][cpablo-repo] by Python core developer `cpablosga`, which is the best implementation of min-search I have seen so far. I like it enough, so I will extend it to do max-search as well (see [this paper][TODO]).
 
 ## Min Search
 
