@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Static site using Zola">
+        <meta name="author" content="gali-leilei">
+        <title></title>
+        <link rel="stylesheet" href="https://gali-leilei.github.io/site.css"/>
+        
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
+  <script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </head>
+    <body>
+
+        <header>
+            <nav class="container">
+                <a class="white" href="https://gali-leilei.github.io/about/" class="nav-link">About</a>
+                <a class="white" href="https://gali-leilei.github.io/resume/" class="nav-link">Resume</a>
+                <a class="white" href="https://gali-leilei.github.io/note/" class="nav-link">Notes</a>
+                <a class="white" href="https://gali-leilei.github.io/projects/" class="nav-link">Projects</a>
+            </nav>
+        </header>
+
+        <div class="content  content--reversed">
+            
+<div class="documentation__content">
+<h1 class="title">
+  TIL Max&#x2F;Min Search and an Interesting Puzzle
+</h1>
+<p class="subtitle"><strong>2023-01-23</strong></p>
+  <h2 id="motivation">Motivation</h2>
+<p>The goal of this note is to have a <strong>simple</strong> implementation of max-search and min-search algorithm in <strong>Python</strong>.</p>
+<p>Why do I need this? There are quite a number of search problems for <a href="https://adventofcode.com/2022">advent-of-code 2022</a>, and normally I would Google <code>python dijkstra/dfs/bfs/</code>. Implementation on Wikipedia has a rather large memory footprint though, with its main search algorithm tangled with data structure. I stumbled upon [A-star-search][cpablo-repo] by Python core developer <code>cpablosga</code>, which is the best implementation of min-search I have seen so far. I like it enough, so I will extend it to do max-search as well (see [this paper][TODO]).</p>
+<h2 id="min-search">Min Search</h2>
+<p>Assumes the problem has a optimal sub-structure. Use A-* if <code>lower_bound()</code> is available; else use uniform cost search (logical equivalent to Dijkstra's algorithm).</p>
+<pre data-lang="python" style="background-color:#383838;color:#e6e1dc;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#f92672dd;">from </span><span>collections </span><span style="color:#f92672dd;">import </span><span>namedtuple
+</span><span>
+</span><span>node </span><span style="color:#cc7833;">= </span><span>namedtuple(</span><span style="color:#a5c261;">&#39;Node&#39;</span><span>, </span><span style="color:#a5c261;">&#39;cost point came_from&#39;</span><span>)
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">min_search</span><span>(</span><span style="font-style:italic;color:#fd971f;">start</span><span>: Point, </span><span style="font-style:italic;color:#fd971f;">is_end</span><span>: Callable[[Point], </span><span style="font-style:italic;color:#6e9cbe;">bool</span><span>]):
+</span><span>    frontier </span><span style="color:#cc7833;">= </span><span>DijkstraHeap(Node(</span><span style="color:#a5c261;">0</span><span>, start))
+</span><span>
+</span><span>    </span><span style="color:#cc7833;">while </span><span>frontier:
+</span><span>        curr </span><span style="color:#cc7833;">= </span><span>frontier.pop()
+</span><span>
+</span><span>        </span><span style="color:#cc7833;">if </span><span>is_target(curr.node):
+</span><span>            </span><span style="color:#cc7833;">return </span><span>frontier
+</span><span>
+</span><span>        </span><span style="color:#cc7833;">for </span><span>edge_cost, node </span><span style="color:#cc7833;">in </span><span>gen_nbh(curr):
+</span><span>            new_cost </span><span style="color:#cc7833;">= </span><span>new_cost </span><span style="color:#cc7833;">+ </span><span>edge_cost </span><span style="color:#cc7833;">+ </span><span>lower_bound(node)
+</span><span>
+</span><span>            new_node </span><span style="color:#cc7833;">= </span><span>Node(</span><span style="font-style:italic;color:#fd971f;">cost</span><span style="color:#cc7833;">=</span><span>new_cost, </span><span style="font-style:italic;color:#fd971f;">point </span><span style="color:#cc7833;">= </span><span>node, </span><span style="font-style:italic;color:#fd971f;">came_from </span><span style="color:#cc7833;">= </span><span>curr)
+</span><span>
+</span><span>            frontier.insert(new_node)
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">class </span><span style="text-decoration:underline;color:#ffc66d;">DijkstraHeap</span><span>(</span><span style="text-decoration:underline;font-style:italic;color:#ffc66d;">list</span><span>):
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#da4939;">__init__</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">start</span><span>: Node):
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.visited </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#6e9cbe;">dict</span><span>()
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.cost </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#6e9cbe;">dict</span><span>()
+</span><span>        </span><span style="color:#cc7833;">if </span><span>start </span><span style="color:#cc7833;">is not </span><span style="color:#6e9cbe;">None</span><span>:
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.append(start)
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">insert</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">node</span><span>):
+</span><span>        </span><span style="color:#cc7833;">if </span><span>node </span><span style="color:#cc7833;">not in </span><span style="color:#d0d0ff;">self</span><span>.visited:
+</span><span>            heapq.heappush(</span><span style="color:#d0d0ff;">self</span><span>)
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">pop</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>):
+</span><span>        </span><span style="color:#cc7833;">while </span><span style="color:#d0d0ff;">self </span><span style="color:#cc7833;">and </span><span style="color:#d0d0ff;">self</span><span>[</span><span style="color:#a5c261;">0</span><span>].point </span><span style="color:#cc7833;">in </span><span>visited:
+</span><span>            heapq.heappop(</span><span style="color:#d0d0ff;">self</span><span>)
+</span><span>
+</span><span>        </span><span style="color:#cc7833;">if </span><span style="color:#d0d0ff;">self</span><span>:
+</span><span>            next_elem </span><span style="color:#cc7833;">= </span><span>heapq.heappop(</span><span style="color:#d0d0ff;">self</span><span>)
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.visited[next_elem.point] </span><span style="color:#cc7833;">= </span><span>next_elem.came_from
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.cost[next_elem.point] </span><span style="color:#cc7833;">= </span><span>next_elem.cost
+</span><span>            </span><span style="color:#cc7833;">return </span><span>next_elem
+</span></code></pre>
+<p>A few notes:</p>
+<ul>
+<li>the standard terminology is <strong>open/visited set</strong> in uniform cost search. I will stick to it (the code use <code>frontier</code> because <code>open</code> is a Python keyword).</li>
+<li><strong>No comparison operator here</strong>. It is possible because whenever we remove a node from the open set, it is guaranteed to be the first time we see it and the cost is minimal.</li>
+<li>Modular. The core idea of <code>check the best-guess from open set</code> is orthogonal to <code>how to remove/add element to open set</code>; so is the implementation here.</li>
+</ul>
+<h2 id="max-search">Max Search</h2>
+<p>Use Branch-and-Bound if <code>upper_bound()</code> is available; else it iterates over all candidates.</p>
+<pre data-lang="python" style="background-color:#383838;color:#e6e1dc;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#f92672dd;">from </span><span>collections </span><span style="color:#f92672dd;">import </span><span>namedtuple
+</span><span>
+</span><span>node </span><span style="color:#cc7833;">= </span><span>namedtuple(</span><span style="color:#a5c261;">&#39;Node&#39;</span><span>, </span><span style="color:#a5c261;">&#39;profit point came_from&#39;</span><span>)
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">max_search</span><span>(</span><span style="font-style:italic;color:#fd971f;">start</span><span>: Point):
+</span><span>    frontier </span><span style="color:#cc7833;">= </span><span>SearchSpace(Node(</span><span style="font-style:italic;color:#fd971f;">profit</span><span style="color:#cc7833;">=</span><span style="color:#a5c261;">0</span><span>, </span><span style="font-style:italic;color:#fd971f;">point</span><span style="color:#cc7833;">=</span><span>start, </span><span style="font-style:italic;color:#fd971f;">came_from</span><span style="color:#cc7833;">=</span><span style="color:#6e9cbe;">None</span><span>))
+</span><span>
+</span><span>    </span><span style="color:#cc7833;">while </span><span>frontier:
+</span><span>        curr </span><span style="color:#cc7833;">= </span><span>frontier.pop()
+</span><span>
+</span><span>        </span><span style="color:#cc7833;">for </span><span>action_reward, node </span><span style="color:#cc7833;">in </span><span>gen_nbh(curr):
+</span><span>            new_profit </span><span style="color:#cc7833;">= </span><span>action_reward </span><span style="color:#cc7833;">+ </span><span>curr.profit
+</span><span>            new_bound </span><span style="color:#cc7833;">= </span><span>new_profit </span><span style="color:#cc7833;">+ </span><span>upper_bound(node)
+</span><span>            new_node </span><span style="color:#cc7833;">= </span><span>Node(</span><span style="font-style:italic;color:#fd971f;">profit</span><span style="color:#cc7833;">=</span><span>new_profit, </span><span style="font-style:italic;color:#fd971f;">point </span><span style="color:#cc7833;">= </span><span>node, </span><span style="font-style:italic;color:#fd971f;">came_from </span><span style="color:#cc7833;">= </span><span>curr)
+</span><span>
+</span><span>            frontier.insert(new_node, </span><span style="font-style:italic;color:#fd971f;">bound</span><span style="color:#cc7833;">=</span><span>new_bound)
+</span><span>
+</span><span>    </span><span style="color:#cc7833;">return </span><span>frontier
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">class </span><span style="text-decoration:underline;color:#ffc66d;">SearchSpace</span><span>(</span><span style="text-decoration:underline;font-style:italic;color:#ffc66d;">list</span><span>):
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#da4939;">__init__</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">start</span><span>: Node):
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.visited </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#6e9cbe;">set</span><span>()
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.cost </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#6e9cbe;">dict</span><span>()
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.best_val </span><span style="color:#cc7833;">= -</span><span style="font-style:italic;color:#6e9cbe;">float</span><span>(</span><span style="color:#a5c261;">&#39;inf&#39;</span><span>)
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">insert</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">node</span><span>, </span><span style="font-style:italic;color:#fd971f;">bound</span><span style="color:#cc7833;">=</span><span style="color:#6e9cbe;">None</span><span>):
+</span><span>        </span><span style="color:#cc7833;">if </span><span>bound </span><span style="color:#cc7833;">is not </span><span style="color:#6e9cbe;">None </span><span style="color:#cc7833;">and </span><span>bound </span><span style="color:#cc7833;">&lt; </span><span style="color:#d0d0ff;">self</span><span>.best_val:
+</span><span>            </span><span style="color:#cc7833;">return
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.append(node)
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">pop</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>):
+</span><span>        </span><span style="color:#cc7833;">if not </span><span style="color:#d0d0ff;">self</span><span>:
+</span><span>            </span><span style="color:#cc7833;">return
+</span><span>        node </span><span style="color:#cc7833;">= </span><span style="color:#d0d0ff;">self</span><span>.pop()
+</span><span>        </span><span style="color:#cc7833;">if </span><span>node.profit </span><span style="color:#cc7833;">&gt; </span><span style="color:#d0d0ff;">self</span><span>.best_val:
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.best_val </span><span style="color:#cc7833;">= </span><span>node.profit
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.profit[node.point] </span><span style="color:#cc7833;">= </span><span>node.profit
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.visited[node.point] </span><span style="color:#cc7833;">= </span><span>node.came_from
+</span><span>        </span><span style="color:#cc7833;">return </span><span>node
+</span></code></pre>
+<p>A few notes:</p>
+<ul>
+<li>Use <code>profit</code> instead of <code>cost</code>, as we are maximizing a quantity instead of minimizing.</li>
+<li>One can use a max-heap instead of a plain array. Either way the open set should be exhausted.</li>
+</ul>
+<h2 id="lesses-more-puzzle">Lesses More Puzzle</h2>
+<p>This is from <a href="https://www.janestreet.com/puzzles/lesses-more-index/">Jane Street Jan 2023</a>.</p>
+<p>Problem statement:
+given non-negative integers a, b, c, d, define two function f and g as:</p>
+<p>g(a, b, c, d) = (abs(a - b), abs(b - c), abs(c - d), abs(d - a))</p>
+<p>f(a, b, c, d) = min(n such that $g^n(a, b, c, d) = (0, 0, 0, 0)$)</p>
+<p>Now consider all 4-tuple where each element is less than 1 million. Find the one tuple with the maximum value of $f(a, b, c, d)$; in case of ties, return the one with smallest total sum.</p>
+<h3 id="the-strategy">The Strategy</h3>
+<p>The <a href="https://www.janestreet.com/puzzles/lesses-more-solution/">official solution</a> is quite clever; it transforms the problem into finding a fixed point of a function over $$\mathbb{R}^4$$.</p>
+<p>Another strategy is to brute force it with max-search outlined above. We start from the end (0, 0, 0, 0) and build a weighted directed graph from it:</p>
+<ul>
+<li>$g(a_1, b_1, c_1, d_1) = (a_2, b_2, c_2, d_2)$, then we have a directed edge $((a_2, b_2, c_2, d_2) \rightarrow (a_1, b_1, c_1, d_1))$ with cost 1.</li>
+<li>we could exploit symmetry to prune the search space. For example $g(a, b, c, d) = g(a, d, c, b)$ due to rotation symmetry. $g(a, b, c, d) = g(b, c, d, a)$ due to reflection symmetry. $g(a, b, c, d) = g(a + m, b + m, c + m, d + m)$ from definition. These edges have edge cost 0.</li>
+<li>the search problem can then be broken into two steps:
+<ul>
+<li>find the set of longest paths starting from (0, 0, 0, 0) under the constraint, and</li>
+<li>sort them by the sum of 4-tuple at the end of the path.</li>
+</ul>
+</li>
+</ul>
+<p>The second step is easier. The first step begs the following questions:</p>
+<ul>
+<li>Q1. which node(s) to start from (variable <code>start</code>)?</li>
+<li>Q2. how to implement <code>def gen_nbr</code>?</li>
+<li>Q3. how to implement <code>def upper_bound</code>?</li>
+</ul>
+<h3 id="which-node-to-start-from">Which Node To Start From</h3>
+<p>The obvious answer is <code>(0, 0, 0, 0)</code>. But then $(x, x, x, x) \leftarrow (0, 0, 0, 0)$, for all x &lt;= N. That is too many to search.</p>
+<p>The first insight came from observing the optimal solution for $N = 100$. Note how power of 2 doubles every 4 iteration:</p>
+<pre data-lang="text" style="background-color:#383838;color:#e6e1dc;" class="language-text "><code class="language-text" data-lang="text"><span>(0, 7, 20, 44) &lt;- 1 | gcd
+</span><span>(7, 13, 24, 44)
+</span><span>(6, 11, 20, 37)
+</span><span>(5, 9, 17, 31)
+</span><span>(4, 8, 14, 26) &lt;- 2 | gcd
+</span><span>(4, 6, 12, 22)
+</span><span>(2, 6, 10, 18)
+</span><span>(4, 4, 8, 16) &lt;- 4 | gcd
+</span><span>(0, 4, 8, 12)
+</span><span>(4, 4, 4, 12)
+</span><span>(0, 0, 8, 8)
+</span><span>(0, 8, 0, 8) &lt;- 8 | gcd
+</span><span>(8, 8, 8, 8)
+</span><span>(0, 0, 0, 0)
+</span></code></pre>
+<p>It turns out that is true for all sequences.</p>
+<p>Claim 1. Let $\alpha, \beta, \gamma, \delta = g^4(a, b, c, d)$. If $2^k | gcd(a, b, c, d)$, then $2^{k + 1} | gcd(\alpha, \beta, \gamma, \delta)$</p>
+<p>Proof:</p>
+<p>$$-x \equiv x \equiv |x| (\mod 2)$$</p>
+<p>We can drop the abs when doing modulo 2, and freely choose sign:</p>
+<p>$$
+(a, b, c, d) \leftarrow (a - b, b - c, c - d, d - a) \leftarrow (a + c, b + d, a + c, b + d) \leftarrow (x, x, x, x) \leftarrow (0, 0, 0, 0)
+$$</p>
+<p>where $$x = a + c + b + d$$.</p>
+<p>QED</p>
+<p>From Claim 1, it suffices to check $(x, x, x, x)$ where $x = 2^k$.</p>
+<h3 id="implementing-gen-nbr">Implementing <code>gen_nbr</code></h3>
+<p>This boils down to iterate over edge with cost 0 and 1, for 4-tuple $(a, b, c, d)$:</p>
+<ul>
+<li>for edge with cost 1, there musts exists an choice of signs $s_i \in {-1, 1}, i = {1,2,3,4}$, such that $s_1 a + s_2 b + s_3 c + s_4 d = 0$.</li>
+<li>for edge with cost 0, it suffices to implement only $(a, b, c, d) \leftarrow (a + m, b + m, c + m, d + m)$.</li>
+</ul>
+<p>To see why we need the second set of edges, consider how to reach $(4, 4, 4, 12)$ from $(0, 0, 8, 8)$. (Hint: $(0, 0, 8, 8) \rightarrow (0, 0, 0, 8) \rightarrow (4, 4, 4, 12)$)</p>
+<h3 id="how-to-implement-upper-bound">How to Implement <code>upper_bound</code></h3>
+<p>The upper bound function follows from Claim 1. If $2^k | gcd(a, b, c, d)$, the longest path is upper bounded by $4(k + 1)$.</p>
+<h3 id="appendix-python-solution">Appendix: Python Solution</h3>
+<p>Putting all the above together, we have the following script:</p>
+<pre data-lang="python" style="background-color:#383838;color:#e6e1dc;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#f92672dd;">import </span><span>math
+</span><span>
+</span><span style="color:#f92672dd;">from </span><span>typing </span><span style="color:#f92672dd;">import </span><span>NamedTuple, Iterable, Tuple
+</span><span style="color:#f92672dd;">from </span><span>collections </span><span style="color:#f92672dd;">import </span><span>namedtuple
+</span><span style="color:#f92672dd;">from </span><span>functools </span><span style="color:#f92672dd;">import </span><span>product
+</span><span>
+</span><span>Point </span><span style="color:#cc7833;">= </span><span>namedtuple(</span><span style="color:#a5c261;">&#39;Point&#39;</span><span>, </span><span style="color:#a5c261;">&#39;a b c d&#39;</span><span>)
+</span><span>Node </span><span style="color:#cc7833;">= </span><span>namedtuple(</span><span style="color:#a5c261;">&#39;Node&#39;</span><span>, </span><span style="color:#a5c261;">&#39;profit point came_from&#39;</span><span>)
+</span><span>
+</span><span>point_sum </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#cc7833;">lambda </span><span style="font-style:italic;color:#fd971f;">s</span><span>: </span><span style="color:#da4939;">sum</span><span>(s)
+</span><span>point_min </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#cc7833;">lambda </span><span style="font-style:italic;color:#fd971f;">s</span><span>: </span><span style="color:#da4939;">min</span><span>(s)
+</span><span>point_max </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#cc7833;">lambda </span><span style="font-style:italic;color:#fd971f;">s</span><span>: </span><span style="color:#da4939;">max</span><span>(s)
+</span><span>add_float </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#cc7833;">lambda </span><span style="font-style:italic;color:#fd971f;">s</span><span>, </span><span style="font-style:italic;color:#fd971f;">f</span><span>: Point(</span><span style="color:#cc7833;">*</span><span>(f </span><span style="color:#cc7833;">+ </span><span>x </span><span style="color:#cc7833;">for </span><span>x </span><span style="color:#cc7833;">in </span><span>s))
+</span><span>dot_prod </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#cc7833;">lambda </span><span style="font-style:italic;color:#fd971f;">s1</span><span>, </span><span style="font-style:italic;color:#fd971f;">s2</span><span>: </span><span style="color:#da4939;">sum</span><span>(x </span><span style="color:#cc7833;">* </span><span>y </span><span style="color:#cc7833;">for </span><span>x, y </span><span style="color:#cc7833;">in </span><span style="color:#da4939;">zip</span><span>(s1, s2))
+</span><span>
+</span><span style="color:#95815e;"># how we advance state
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">g</span><span>(</span><span style="font-style:italic;color:#fd971f;">s</span><span>: Point):
+</span><span>    </span><span style="color:#cc7833;">return </span><span>Point(</span><span style="color:#da4939;">abs</span><span>(s.a </span><span style="color:#cc7833;">- </span><span>s.b), </span><span style="color:#da4939;">abs</span><span>(s.b </span><span style="color:#cc7833;">- </span><span>s.c), </span><span style="color:#da4939;">abs</span><span>(s.c </span><span style="color:#cc7833;">- </span><span>s.d), </span><span style="color:#da4939;">abs</span><span>(s.d </span><span style="color:#cc7833;">- </span><span>s.a))
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">solve</span><span>(</span><span style="font-style:italic;color:#fd971f;">lst</span><span>: Iterable[</span><span style="font-style:italic;color:#6e9cbe;">int</span><span>], </span><span style="font-style:italic;color:#fd971f;">sign</span><span>: Iterable[</span><span style="font-style:italic;color:#6e9cbe;">int</span><span>]) -&gt; Point:
+</span><span>    result </span><span style="color:#cc7833;">= </span><span>[</span><span style="color:#a5c261;">0</span><span>] </span><span style="color:#cc7833;">* </span><span style="color:#a5c261;">4
+</span><span>    </span><span style="color:#cc7833;">for </span><span>i </span><span style="color:#cc7833;">in </span><span style="color:#da4939;">range</span><span>(</span><span style="color:#a5c261;">3</span><span>):
+</span><span>        result[i] </span><span style="color:#cc7833;">= </span><span>result[i </span><span style="color:#cc7833;">- </span><span style="color:#a5c261;">1</span><span>] </span><span style="color:#cc7833;">- </span><span>sign[i </span><span style="color:#cc7833;">- </span><span style="color:#a5c261;">1</span><span>] </span><span style="color:#cc7833;">* </span><span>lst[i </span><span style="color:#cc7833;">- </span><span style="color:#a5c261;">1</span><span>]
+</span><span>    floor </span><span style="color:#cc7833;">= </span><span style="color:#da4939;">min</span><span>(result)
+</span><span>    </span><span style="color:#cc7833;">if </span><span>floor </span><span style="color:#cc7833;">&lt; </span><span style="color:#a5c261;">0</span><span>:
+</span><span>        result </span><span style="color:#cc7833;">= </span><span>[x </span><span style="color:#cc7833;">- </span><span>floor </span><span style="color:#cc7833;">for </span><span>x </span><span style="color:#cc7833;">in </span><span>result]
+</span><span>    </span><span style="color:#cc7833;">return </span><span>Point(</span><span style="color:#cc7833;">*</span><span>result)
+</span><span>
+</span><span style="color:#95815e;"># iterate over all 2^4 = 16 possible sign combination
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">gen_sign</span><span>():
+</span><span>    signs </span><span style="color:#cc7833;">= </span><span>(</span><span style="color:#cc7833;">-</span><span style="color:#a5c261;">1</span><span>, </span><span style="color:#a5c261;">1</span><span>)
+</span><span>    </span><span style="color:#cc7833;">for </span><span>a, b, c, d </span><span style="color:#cc7833;">in </span><span>product(signs, signs, signs, signs):
+</span><span>        result </span><span style="color:#cc7833;">= </span><span>Point(a, b, c, d)
+</span><span>        </span><span style="color:#cc7833;">yield </span><span>result, point_sum(result)
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">gen_nbh</span><span>(</span><span style="font-style:italic;color:#fd971f;">curr</span><span>: Point) -&gt; Tuple[</span><span style="font-style:italic;color:#6e9cbe;">int</span><span>, Point]:
+</span><span>    </span><span style="color:#cc7833;">for </span><span>sign, sign_sum </span><span style="color:#cc7833;">in </span><span>gen_sign():
+</span><span>        </span><span style="color:#cc7833;">if </span><span>sign_sum </span><span style="color:#cc7833;">in </span><span>(</span><span style="color:#cc7833;">-</span><span style="color:#a5c261;">4</span><span>, </span><span style="color:#a5c261;">4</span><span>):
+</span><span>            </span><span style="color:#cc7833;">continue
+</span><span>        curr_sum </span><span style="color:#cc7833;">= </span><span>dot_prod(curr, sign)
+</span><span>        </span><span style="color:#cc7833;">if </span><span>curr_sum </span><span style="color:#cc7833;">== </span><span style="color:#a5c261;">0</span><span>:
+</span><span>            prev </span><span style="color:#cc7833;">= </span><span>solve(curr, sign)
+</span><span>            </span><span style="color:#cc7833;">if </span><span>point_sum(prev) </span><span style="color:#cc7833;">&gt; </span><span style="color:#a5c261;">0</span><span>:
+</span><span>                </span><span style="color:#cc7833;">yield </span><span style="color:#a5c261;">1</span><span>, prev
+</span><span>        </span><span style="color:#95815e;"># 3 pos, 1 neg. if all number +m, then
+</span><span>        </span><span style="color:#95815e;"># curr_sum + 2m = 0 -&gt; m = - dot_prod / 2
+</span><span>        </span><span style="color:#cc7833;">if </span><span>sign_sum </span><span style="color:#cc7833;">== </span><span style="color:#a5c261;">2 </span><span style="color:#cc7833;">and </span><span>curr_sum </span><span style="color:#cc7833;">!= </span><span style="color:#a5c261;">0 </span><span style="color:#cc7833;">and </span><span>curr_sum </span><span style="color:#cc7833;">% </span><span style="color:#a5c261;">2 </span><span style="color:#cc7833;">== </span><span style="color:#a5c261;">0</span><span>:
+</span><span>            m </span><span style="color:#cc7833;">= - </span><span>curr_sum </span><span style="color:#cc7833;">// </span><span style="color:#a5c261;">2
+</span><span>            new_curr </span><span style="color:#cc7833;">= </span><span>add_float(curr, m)
+</span><span>            </span><span style="color:#cc7833;">if </span><span>point_min(new_curr) </span><span style="color:#cc7833;">&gt;= </span><span style="color:#a5c261;">0 </span><span style="color:#cc7833;">and </span><span>point_max(new_curr) </span><span style="color:#cc7833;">&gt; </span><span style="color:#a5c261;">0</span><span>:
+</span><span>                </span><span style="color:#cc7833;">yield </span><span style="color:#a5c261;">0</span><span>, new_curr
+</span><span>        </span><span style="color:#95815e;"># 3 neg, 1 pos, if all number +m, then
+</span><span>        </span><span style="color:#95815e;"># curr_sum - 2m = 0 -&gt; m = dot_prod / 2
+</span><span>        </span><span style="color:#cc7833;">if </span><span>sign_sum </span><span style="color:#cc7833;">== -</span><span style="color:#a5c261;">2 </span><span style="color:#cc7833;">and </span><span>curr_sum </span><span style="color:#cc7833;">!= </span><span style="color:#a5c261;">0 </span><span style="color:#cc7833;">and </span><span>curr_sum </span><span style="color:#cc7833;">% </span><span style="color:#a5c261;">2 </span><span style="color:#cc7833;">== </span><span style="color:#a5c261;">0</span><span>:
+</span><span>            m </span><span style="color:#cc7833;">= </span><span>curr_sum </span><span style="color:#cc7833;">// </span><span style="color:#a5c261;">2
+</span><span>            new_curr </span><span style="color:#cc7833;">= </span><span>add_float(curr, m)
+</span><span>            </span><span style="color:#cc7833;">if </span><span>point_min(new_curr) </span><span style="color:#cc7833;">&gt;= </span><span style="color:#a5c261;">0 </span><span style="color:#cc7833;">and </span><span>point_max(new_curr) </span><span style="color:#cc7833;">&gt; </span><span style="color:#a5c261;">0</span><span>:
+</span><span>                </span><span style="color:#cc7833;">yield </span><span style="color:#a5c261;">0</span><span>, new_curr
+</span><span>
+</span><span style="color:#95815e;"># helper function for search_max
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">upper_bound</span><span>(</span><span style="font-style:italic;color:#fd971f;">s</span><span>: Point):
+</span><span>    x </span><span style="color:#cc7833;">= </span><span>math.gcd(s.a, s.b)
+</span><span>    y </span><span style="color:#cc7833;">= </span><span>math.gcd(s.c, s.d)
+</span><span>    gcd </span><span style="color:#cc7833;">= </span><span>math.gcd(x, y)
+</span><span>    </span><span style="color:#cc7833;">assert </span><span>gcd </span><span style="color:#cc7833;">&gt; </span><span style="color:#a5c261;">0</span><span>, </span><span style="font-style:italic;color:#6e9cbe;">f</span><span style="color:#c1be91;">&quot;found gcd == 0 for </span><span>{s}</span><span style="color:#c1be91;">&quot;
+</span><span>    answer </span><span style="color:#cc7833;">= </span><span style="color:#a5c261;">0
+</span><span>    </span><span style="color:#cc7833;">while </span><span style="color:#6e9cbe;">True</span><span>:
+</span><span>        </span><span style="color:#cc7833;">if </span><span>gcd </span><span style="color:#cc7833;">% </span><span>(</span><span style="color:#a5c261;">2 </span><span style="color:#cc7833;">&lt;&lt; </span><span>answer) </span><span style="color:#cc7833;">== </span><span style="color:#a5c261;">0</span><span>:
+</span><span>            answer </span><span style="color:#cc7833;">+= </span><span style="color:#a5c261;">1
+</span><span>        </span><span style="color:#cc7833;">else</span><span>:
+</span><span>            </span><span style="color:#cc7833;">return </span><span style="color:#a5c261;">4 </span><span style="color:#cc7833;">* </span><span>(answer </span><span style="color:#cc7833;">+ </span><span style="color:#a5c261;">1</span><span>)
+</span><span>    </span><span style="color:#cc7833;">return </span><span style="color:#6e9cbe;">None
+</span><span>
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">max_search</span><span>(</span><span style="font-style:italic;color:#fd971f;">N </span><span style="color:#cc7833;">= </span><span style="color:#a5c261;">10_000_000</span><span>):
+</span><span>    frontier </span><span style="color:#cc7833;">= </span><span>SearchSpace(N)
+</span><span>
+</span><span>    </span><span style="color:#cc7833;">while </span><span>frontier:
+</span><span>        curr </span><span style="color:#cc7833;">= </span><span>frontier.pop()
+</span><span>
+</span><span>        profit, point, </span><span style="color:#d0d0ff;">_ </span><span style="color:#cc7833;">= </span><span>curr
+</span><span>        </span><span style="color:#cc7833;">for </span><span>action_reward, node </span><span style="color:#cc7833;">in </span><span>gen_nbh(point):
+</span><span>            new_profit </span><span style="color:#cc7833;">= </span><span>action_reward </span><span style="color:#cc7833;">+ </span><span>profit
+</span><span>            new_bound </span><span style="color:#cc7833;">= </span><span>new_profit </span><span style="color:#cc7833;">+ </span><span>upper_bound(node)
+</span><span>            new_node </span><span style="color:#cc7833;">= </span><span>Node(</span><span style="font-style:italic;color:#fd971f;">profit</span><span style="color:#cc7833;">=</span><span>new_profit, </span><span style="font-style:italic;color:#fd971f;">point </span><span style="color:#cc7833;">= </span><span>node, </span><span style="font-style:italic;color:#fd971f;">came_from </span><span style="color:#cc7833;">= </span><span>point)
+</span><span>
+</span><span>            frontier.insert(new_node, </span><span style="font-style:italic;color:#fd971f;">bound</span><span style="color:#cc7833;">=</span><span>new_bound)
+</span><span>
+</span><span>    </span><span style="color:#cc7833;">return </span><span>frontier
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">class </span><span style="text-decoration:underline;color:#ffc66d;">SearchSpace</span><span>(</span><span style="text-decoration:underline;font-style:italic;color:#ffc66d;">list</span><span>):
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#da4939;">__init__</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">N </span><span style="color:#cc7833;">= </span><span style="color:#a5c261;">10_000_000</span><span>):
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.visited </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#6e9cbe;">set</span><span>()
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.profit </span><span style="color:#cc7833;">= </span><span style="font-style:italic;color:#6e9cbe;">dict</span><span>()
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.best_val </span><span style="color:#cc7833;">= -</span><span style="font-style:italic;color:#6e9cbe;">float</span><span>(</span><span style="color:#a5c261;">&#39;inf&#39;</span><span>)
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.best_point </span><span style="color:#cc7833;">= </span><span>[]
+</span><span>
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.N </span><span style="color:#cc7833;">= </span><span>N
+</span><span>        x </span><span style="color:#cc7833;">= </span><span style="color:#a5c261;">2
+</span><span>        </span><span style="color:#cc7833;">while </span><span>x </span><span style="color:#cc7833;">&lt;= </span><span style="color:#d0d0ff;">self</span><span>.N:
+</span><span>            point </span><span style="color:#cc7833;">= </span><span>Point(x, x, x, x)
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.insert(Node(</span><span style="font-style:italic;color:#fd971f;">profit</span><span style="color:#cc7833;">=</span><span style="color:#a5c261;">2</span><span>, </span><span style="font-style:italic;color:#fd971f;">point</span><span style="color:#cc7833;">=</span><span>point, </span><span style="font-style:italic;color:#fd971f;">came_from</span><span style="color:#cc7833;">=</span><span style="color:#6e9cbe;">None</span><span>), </span><span style="font-style:italic;color:#fd971f;">bound</span><span style="color:#cc7833;">=</span><span style="color:#a5c261;">2</span><span>)
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.visited.add(point)
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.profit[point] </span><span style="color:#cc7833;">= </span><span style="color:#a5c261;">2
+</span><span>            x </span><span style="color:#cc7833;">= </span><span style="color:#a5c261;">2 </span><span style="color:#cc7833;">* </span><span>x
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">insert</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>, </span><span style="font-style:italic;color:#fd971f;">node</span><span>, </span><span style="font-style:italic;color:#fd971f;">bound</span><span style="color:#cc7833;">=</span><span style="color:#6e9cbe;">None</span><span>):
+</span><span>        </span><span style="color:#cc7833;">if </span><span>node.point </span><span style="color:#cc7833;">in </span><span style="color:#d0d0ff;">self</span><span>.visited:
+</span><span>            </span><span style="color:#cc7833;">return
+</span><span>        </span><span style="color:#cc7833;">if </span><span>point_max(node.point) </span><span style="color:#cc7833;">&gt; </span><span style="color:#d0d0ff;">self</span><span>.N:
+</span><span>            </span><span style="color:#cc7833;">return
+</span><span>        </span><span style="color:#cc7833;">if </span><span>bound </span><span style="color:#cc7833;">&lt; </span><span style="color:#d0d0ff;">self</span><span>.best_val:
+</span><span>            </span><span style="color:#cc7833;">return
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.append(node)
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">pop</span><span>(</span><span style="font-style:italic;color:#fd971f;">self</span><span>):
+</span><span>        node </span><span style="color:#cc7833;">= </span><span style="color:#da4939;">super</span><span>(SearchSpace, </span><span style="color:#d0d0ff;">self</span><span>).pop()
+</span><span>        </span><span style="color:#cc7833;">if </span><span>node.profit </span><span style="color:#cc7833;">&gt; </span><span style="color:#d0d0ff;">self</span><span>.best_val:
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.best_val </span><span style="color:#cc7833;">= </span><span>node.profit
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.best_point.clear()
+</span><span>        </span><span style="color:#cc7833;">if </span><span>node.profit </span><span style="color:#cc7833;">== </span><span style="color:#d0d0ff;">self</span><span>.best_val:
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.best_val </span><span style="color:#cc7833;">= </span><span>node.profit
+</span><span>            </span><span style="color:#d0d0ff;">self</span><span>.best_point.append(node.point)
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.profit[node.point] </span><span style="color:#cc7833;">= </span><span>node.profit
+</span><span>        </span><span style="color:#d0d0ff;">self</span><span>.visited.add(node.point)
+</span><span>        </span><span style="color:#cc7833;">return </span><span>node
+</span><span>
+</span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">find_smallest_sum</span><span>(</span><span style="font-style:italic;color:#fd971f;">N</span><span>):
+</span><span>    frontier </span><span style="color:#cc7833;">= </span><span>max_search(</span><span style="color:#a5c261;">100_000_00</span><span>)
+</span><span>    smallest </span><span style="color:#cc7833;">= </span><span>[(point_sum(point), point) </span><span style="color:#cc7833;">for </span><span>point </span><span style="color:#cc7833;">in </span><span>frontier.best_point]
+</span><span>    smallest </span><span style="color:#cc7833;">= </span><span style="color:#da4939;">sorted</span><span>(smallest)
+</span><span>    </span><span style="color:#cc7833;">return </span><span>frontier.best_val, smallest[</span><span style="color:#a5c261;">0</span><span>][</span><span style="color:#a5c261;">0</span><span>], smallest[</span><span style="color:#a5c261;">0</span><span>][</span><span style="color:#a5c261;">1</span><span>]
+</span><span>
+</span><span>N </span><span style="color:#cc7833;">= </span><span style="color:#a5c261;">10_000_000
+</span><span style="color:#da4939;">print</span><span>(find_smallest_sum(N))
+</span><span style="color:#95815e;"># 20 815 State(a=0, b=81, c=230, d=504) when N = 1_000
+</span><span style="color:#95815e;"># 38 1221623 State(a=0, b=121415, c=344732, d=755476) when N = 1_000_000
+</span><span style="color:#95815e;"># 44 13980895 State(a=0, b=1389537, c=3945294, d=8646064) when N = 10_000_000
+</span></code></pre>
+
+</div>
+
+        </div>
+        <!-- <footer>
+            ©2017-2025 — <a class="white" href="https://vincentprouillet.com">Vincent Prouillet</a> and <a class="white" href="https://github.com/getzola/zola/graphs/contributors">contributors</a>
+        </footer> -->
+
+    </body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Static site using Zola">
+        <meta name="author" content="gali-leilei">
+        <title></title>
+        <link rel="stylesheet" href="https://gali-leilei.github.io/site.css"/>
+        
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
+  <script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </head>
+    <body>
+
+        <header>
+            <nav class="container">
+                <a class="white" href="https://gali-leilei.github.io/about/" class="nav-link">About</a>
+                <a class="white" href="https://gali-leilei.github.io/resume/" class="nav-link">Resume</a>
+                <a class="white" href="https://gali-leilei.github.io/note/" class="nav-link">Notes</a>
+                <a class="white" href="https://gali-leilei.github.io/projects/" class="nav-link">Projects</a>
+            </nav>
+        </header>
+
+        <div class="content  content--reversed">
+            
+<div class="documentation__content">
+<h1 class="title">
+  What I am doing now, May 2024
+</h1>
+<p class="subtitle"><strong>2021-05-04</strong></p>
+  <p>See <a href="https://gali-leilei.github.io/now/may-2021/">previous post</a>. Time flies: I have joined and left Lazada in the meantime. Right now I am working as AI Scientist @ Shanda.</p>
+<h1 id="bootstrapping-recommendation-service">Bootstrapping Recommendation Service</h1>
+<p>The tech stack is simple:</p>
+<ul>
+<li><a href="https://github.com/alibaba/pairec"><strong>pairec</strong> from Aliyun</a> for backend service. Not a fan honestly, as we are using maybe less than 5% of the codebase; the remaining 95% just complicate things and slow the team down.</li>
+<li><strong>AWS Postgres</strong> for offline batch processing/online feature store. A <strong>single</strong> Flink job processing app tracking event from a Kafka topic, and appends to a user log table. Everything else live on the DB.</li>
+<li><strong>DBT</strong> for managing SQL task and <strong>k8s-cronjob</strong> for scheduling batch task.</li>
+</ul>
+<p>Pairec lacks <strong>A LOT OF</strong> things for the stack, mostly because the stack is on AWS, not Aliyun. If time allows, plan to add:</p>
+<ul>
+<li>Config/Secret live reloading. Plan to adopt <a href="https://github.com/knadh/koanf">koanf</a>, a lighter version of viper.</li>
+<li>A/B testing or feature flag. The challenge here is locality of logic to reduce complexity, which I may write a note on. <a href="https://github.com/growthbook/growthbook">Growthbook</a> uses feature flag, which may work out.</li>
+<li>ML model serving. Not a priority right now, because no user == no data == no machine learning. <a href="https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/v2-protocol.html">Open Inference Protocol</a> seems exactly what we need.</li>
+</ul>
+<h1 id="getting-into-go">Getting Into Go</h1>
+<p>The transition from Python feels quite natural, as I was comfortable with <code>TypeDict</code>, <code>pydantic</code> model and type annotation anyway. The aha moment for me, was treating golang == C with sane syntax + async runtime (goroutine and channel) + interface, instead of another new language. I also like that, Golang treats Makefile and SQL as first class citizen, instead of reinvents the wheel. The only thing I miss from Python are sum type and list comprehension.</p>
+<p>This is how many lines of golang I have written since the switch:</p>
+<pre data-lang="bash" style="background-color:#383838;color:#e6e1dc;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="font-style:italic;color:#7c7865;"># use this SO answer: https://stackoverflow.com/a/7010890
+</span><span>added lines: 4968, removed lines: 4345, total lines: 623
+</span></code></pre>
+
+</div>
+
+        </div>
+        <!-- <footer>
+            ©2017-2025 — <a class="white" href="https://vincentprouillet.com">Vincent Prouillet</a> and <a class="white" href="https://github.com/getzola/zola/graphs/contributors">contributors</a>
+        </footer> -->
+
+    </body>
+</html>
