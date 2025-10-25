@@ -1,5 +1,6 @@
 # zola will generate these files
 static
+public
 
 # mac os stff
 .DS_Store
