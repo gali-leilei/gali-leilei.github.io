@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Static site using Zola">
+        <meta name="author" content="gali-leilei">
+        <title></title>
+        <link rel="stylesheet" href="https://gali-leilei.github.io/site.css"/>
+        
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script id="MathJax-script" async 
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js">
+</script>
+
+    </head>
+    <body>
+
+        <header>
+            <nav class="container">
+                <a class="white" href="https://gali-leilei.github.io/about/" class="nav-link">About</a>
+                <a class="white" href="https://gali-leilei.github.io/resume/" class="nav-link">Resume</a>
+                <a class="white" href="https://gali-leilei.github.io/note/" class="nav-link">Notes</a>
+                <a class="white" href="https://gali-leilei.github.io/projects/" class="nav-link">Projects</a>
+            </nav>
+        </header>
+
+        <div class="content  content--reversed">
+            
+<div class="documentation__content">
+<h1 class="title">
+  What I am doing now, Dec 2024
+</h1>
+<p class="subtitle"><strong>2021-12-04</strong></p>
+  <p>See <a href="https://gali-leilei.github.io/now/may-2024/">previous post</a>. I have been working on <a href="https://www.newsbang.com/">A news + AI app</a>. It is now available on <a href="https://apps.apple.com/us/app/newsbang-ai-news-insights/id6736856545">iOS</a>.</p>
+<p>The tech stack is Flutter(frontend) + Java/Spring(backend) + Golang(AI) + Postgres and S3(storage) + riverqueue(job queue) + bricksllm(LLM proxy). I worked on AI services.</p>
+<h2 id="golang-for-ai-service">Golang for AI Service</h2>
+<p>Nowadays, AI Engineer is mostly API Engineer, where P is silent.  Stitching multiple third party API endpoint in a non-blocking manner is <strong>possible</strong> in Python. Doing the same thing is <strong>simple</strong> in Golang. I like simple things.</p>
+<h2 id="trying-out-riverqueue">Trying Out Riverqueue</h2>
+<p>[riverqueue] is a distributed job queue. It uses postgres to manage job/queue status. It is relatively new, but the core developers are experts in this problem space. I would use the same thing in my next project.</p>
+<h2 id="no-frameworks">No Frameworks</h2>
+<ul>
+<li>
+<p>AI frameworks: langchain/promptflow/genkit/autogen etc. 99% of <strong>current</strong> LLM application complexity consists of two tasks: string substitution and calling HTTP endpoints. Instead,  <code>text/template</code>+ <code>net/http</code> suffices.</p>
+</li>
+<li>
+<p>web frameworks: gin/huma/echo/fastapi etc. <code>net/http</code> suffices.</p>
+</li>
+</ul>
+<p>I see two added benefits:</p>
+<ul>
+<li>People of all levels can contribute.</li>
+<li>Code assistance works better. Golang standard library is backward compatible; LLM spitting out a 10 years old code snippet would still work fine. When LLM generated code does not compile, 99% of the time golang language server can fix.</li>
+</ul>
+<h2 id="what-not-to-do">What Not To Do</h2>
+<p>Uncle Bob put it like this <a href="https://www.youtube.com/watch?v=ecIWPzGEbFc">see full video here</a>:</p>
+<blockquote>
+<p>If we have made any advances in software, since 1945, it is almost entirely in <strong>what not to do</strong>. Structured Programming was in what not to do — don’t use unrestrained GOTO. Functional Programming — don’t use assignment. Object-Oriented Programming — don’t use pointers to functions. What we have learned over the last 70-some years is more about what not to do, than what to do. There have been no radical advances in software technology. The craft of writing software remains roughly the same as it was in 1945 — a little more modern, but not essentially any different.</p>
+</blockquote>
+<p>Here is a</p>
+<ul>
+<li>Using frameworks. Tech stack complexity should not exceed application complexity. 99% of <strong>current</strong> LLM application complexity consists of two tasks: string substitution and calling HTTP endpoints. The keyword is current because the technology is young. Building abstraction this early is premature optimization. At work I advocates using only <code>text/template</code> (or <code>templ</code> for string substitution)+ <code>net/http</code> (or <code>requests</code> for calling HTTP endpoints) for RAG workflow.</li>
+</ul>
+
+</div>
+
+        </div>
+        <!-- <footer>
+            ©2017-2025 — <a class="white" href="https://vincentprouillet.com">Vincent Prouillet</a> and <a class="white" href="https://github.com/getzola/zola/graphs/contributors">contributors</a>
+        </footer> -->
+
+    </body>
+</html>

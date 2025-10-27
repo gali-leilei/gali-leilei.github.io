@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Static site using Zola">
+        <meta name="author" content="gali-leilei">
+        <title></title>
+        <link rel="stylesheet" href="https://gali-leilei.github.io/site.css"/>
+        
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script id="MathJax-script" async 
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js">
+</script>
+
+    </head>
+    <body>
+
+        <header>
+            <nav class="container">
+                <a class="white" href="https://gali-leilei.github.io/about/" class="nav-link">About</a>
+                <a class="white" href="https://gali-leilei.github.io/resume/" class="nav-link">Resume</a>
+                <a class="white" href="https://gali-leilei.github.io/note/" class="nav-link">Notes</a>
+                <a class="white" href="https://gali-leilei.github.io/projects/" class="nav-link">Projects</a>
+            </nav>
+        </header>
+
+        <div class="content  content--reversed">
+            
+<div class="documentation__content">
+<h1 class="title">
+  Lightweight DAG Framework
+</h1>
+<p class="subtitle"><strong>2023-12-31</strong></p>
+  <h1 id="introduction">Introduction</h1>
+<p><a href="https://bitbucket.org/galileilei/python-dirk/src/main/">python-dirk</a> is a proof-of-concept library, demonstrating a new API for declaring Direct Acyclic Graph (DAG) workflow. Here is a snippet, of writing task A -&gt; task B:</p>
+<pre data-lang="python" style="background-color:#383838;color:#e6e1dc;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#f92672dd;">from </span><span>python_dirk </span><span style="color:#f92672dd;">import </span><span>Pipeline, Depends
+</span><span>
+</span><span style="color:#cc7833;">async </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">handle_request</span><span>:
+</span><span>    dag </span><span style="color:#cc7833;">= </span><span>Pipeline() </span><span style="color:#95815e;"># 1 
+</span><span>
+</span><span>    @dag.mark_node(</span><span style="font-style:italic;color:#fd971f;">timeout_in_ms</span><span style="color:#cc7833;">=</span><span style="color:#a5c261;">100</span><span>, </span><span style="font-style:italic;color:#fd971f;">failsafe</span><span style="color:#cc7833;">=</span><span style="color:#a5c261;">2</span><span>) </span><span style="color:#95815e;"># 2
+</span><span>    </span><span style="color:#cc7833;">async </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">coro_a</span><span>():
+</span><span>        </span><span style="color:#cc7833;">await </span><span>asyncio.sleep(</span><span style="color:#a5c261;">0.5</span><span>)
+</span><span>        </span><span style="color:#da4939;">print</span><span>(</span><span style="color:#c1be91;">&quot;FUNCTION </span><span style="color:#6d9cbe;">{}</span><span style="color:#c1be91;"> after sleeping for </span><span style="color:#6d9cbe;">{}</span><span style="color:#c1be91;"> s&quot;</span><span>.format(</span><span style="color:#c1be91;">&quot;coro_a&quot;</span><span>, </span><span style="color:#a5c261;">0.5</span><span>))
+</span><span>
+</span><span>    @dag.mark_node(</span><span style="font-style:italic;color:#fd971f;">timeout_in_ms</span><span style="color:#cc7833;">=</span><span style="color:#a5c261;">100</span><span>, </span><span style="font-style:italic;color:#fd971f;">failsafe</span><span style="color:#cc7833;">=</span><span style="color:#a5c261;">2</span><span>)
+</span><span>    </span><span style="color:#cc7833;">async </span><span style="font-style:italic;color:#cc7833;">def </span><span style="color:#ffc66d;">coro_b</span><span>(</span><span style="font-style:italic;color:#fd971f;">x</span><span style="color:#cc7833;">=</span><span>Depends(coro_a)): </span><span style="color:#95815e;"># 3
+</span><span>        </span><span style="color:#cc7833;">await </span><span>asyncio.sleep(</span><span style="color:#a5c261;">0.5</span><span>)
+</span><span>        </span><span style="color:#da4939;">print</span><span>(</span><span style="color:#c1be91;">&quot;FUNCTION </span><span style="color:#6d9cbe;">{}</span><span style="color:#c1be91;"> after sleeping for </span><span style="color:#6d9cbe;">{}</span><span style="color:#c1be91;"> s&quot;</span><span>.format(</span><span style="color:#c1be91;">&quot;coro_c&quot;</span><span>, </span><span style="color:#a5c261;">0.5</span><span>))
+</span><span>
+</span><span>    result </span><span style="color:#cc7833;">= await </span><span>dag.execute_graph_v2() </span><span style="color:#95815e;"># 4
+</span><span>    </span><span style="color:#cc7833;">return </span><span>result
+</span></code></pre>
+<p>Notes:</p>
+<ol>
+<li>a pipeline == DAG, where node representing a unit of work, and directed edge representing the dependencies.</li>
+<li>each unit of work is constrained to run under <code>timeout_in_ms</code>; if it does not, pipeline will pass <code>failsafe</code> value to downstream works.</li>
+<li>dependencies are declared like FastAPI <code>Depends</code>. The caveat here is that the variable MUST BE part of pipeline FIRST.</li>
+<li><code>execute_graph_v2()</code> kick-starts and runs to completion.</li>
+</ol>
+<h1 id="why-another-workflow-engine">Why another workflow engine?</h1>
+<p>There are <a href="https://github.com/meirwah/awesome-workflow-engines">DOZENS of workflow engine out there</a>. <code>python-dirk</code> is <strong>lightweight</strong>:</p>
+<ul>
+<li>The entire package is under 300 lines, inclusive of comments and blank lines.</li>
+<li>It only depends on <code>loguru</code> and <code>networkx</code>. Plan to remove them in the future.</li>
+<li>Everything runs in an async runtime loop.</li>
+</ul>
+<p>Because it is lightweight, you can run it inside a REST endpoint.</p>
+<h1 id="why-this-engine-over-other-engine">Why this engine over other engine?</h1>
+<p>You don't choose this over others. I have not run this in production, and neither should you.</p>
+<h1 id="what-is-good-about-this">What is good about this?</h1>
+<p>You use this if you like the FastAPI style of dependency injection.</p>
+<p>This builds on that syntax, and add timeout and failsafe to make it suitable for high availability requirement.</p>
+
+</div>
+
+        </div>
+        <!-- <footer>
+            ©2017-2025 — <a class="white" href="https://vincentprouillet.com">Vincent Prouillet</a> and <a class="white" href="https://github.com/getzola/zola/graphs/contributors">contributors</a>
+        </footer> -->
+
+    </body>
+</html>

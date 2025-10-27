@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Static site using Zola">
+        <meta name="author" content="gali-leilei">
+        <title></title>
+        <link rel="stylesheet" href="https://gali-leilei.github.io/site.css"/>
+        
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script id="MathJax-script" async 
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js">
+</script>
+
+    </head>
+    <body>
+
+        <header>
+            <nav class="container">
+                <a class="white" href="https://gali-leilei.github.io/about/" class="nav-link">About</a>
+                <a class="white" href="https://gali-leilei.github.io/resume/" class="nav-link">Resume</a>
+                <a class="white" href="https://gali-leilei.github.io/note/" class="nav-link">Notes</a>
+                <a class="white" href="https://gali-leilei.github.io/projects/" class="nav-link">Projects</a>
+            </nav>
+        </header>
+
+        <div class="content  content--reversed">
+            
+<div class="documentation__content">
+<h1 class="title">
+  Lightweight Recommendation Service
+</h1>
+<p class="subtitle"><strong>2024-10-27</strong></p>
+  <h1 id="introduction">Introduction</h1>
+<p><a href="https://bitbucket.org/galileilei/literec/src/main/">pairec-lite</a> is a stripped-down version of <a href="https://github.com/alibaba/pairec">Alibaba's pairec</a>, with no external dependencies. This repo is more pedagogical than practical.</p>
+<p>Here is how one bootstrap a service using <code>pairec-lite</code>.</p>
+<pre data-lang="go" style="background-color:#383838;color:#e6e1dc;" class="language-go "><code class="language-go" data-lang="go"></code></pre>
+<h1 id="why-use-pairec-in-the-first-place">Why use <code>pairec</code> in the first place?</h1>
+<ul>
+<li>lack of resources. At first we have one and a half people to develop a recommendation service from scratch. It was not a priority feature.</li>
+<li>lack of experience. Most of the team has no ideas what a recommendation service is.</li>
+<li>possibility of throwaway software. Due to uncertainty of how long the product can survive, we may not need to pay the high interest rate from the technical debt of using a heavy framework.</li>
+</ul>
+<h1 id="why-should-i-use-pairec-instead-of-pairec-lite">Why should I use <code>pairec</code> instead of <code>pairec-lite</code>?</h1>
+<p>In most cases, you should not. I used it at work for several reason:</p>
+<ul>
+<li><code>pairec</code> offers way more than what we use. The infra stack was simply AWS + Postgres, less than 5% of what pairec offers out-of-the-box.</li>
+<li>adapting <code>pairec</code> for other uses. These include: adapting <code>pairec</code> for search; embedding <code>pairec</code> into an existing web service; adding timeout control and streaming responses. Like all frameworks, doing things not the way it intends is a lot of work.</li>
+<li>stripping down dependencies. <code>pairec</code> and its transitive  dependencies adds around 30MB after compilation.</li>
+</ul>
+
+</div>
+
+        </div>
+        <!-- <footer>
+            ©2017-2025 — <a class="white" href="https://vincentprouillet.com">Vincent Prouillet</a> and <a class="white" href="https://github.com/getzola/zola/graphs/contributors">contributors</a>
+        </footer> -->
+
+    </body>
+</html>
